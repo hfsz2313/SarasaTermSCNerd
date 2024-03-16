@@ -367,7 +367,6 @@ class font_patcher:
         if "grave" in self.sourceFont:
             self.sourceFont["grave"].glyphclass="baseglyph"
 
-
     def generate(self, sourceFonts):
         sourceFont = sourceFonts[0]
         # the `PfEd-comments` flag is required for Fontforge to save '.comment' and '.fontlog'.
@@ -450,7 +449,6 @@ class font_patcher:
             subprocess.call([self.args.postprocess, outfile])
             print("\nPost Processed: {}".format(outfile))
 
-
     def setup_name_backup(self, font):
         """ Store the original font names to be able to rename the font multiple times """
         font.persistent = {
@@ -458,7 +456,6 @@ class font_patcher:
             "fullname": font.fullname,
             "familyname": font.familyname,
         }
-
 
     def setup_font_names(self, font):
         font.fontname = font.persistent["fontname"]
@@ -688,7 +685,6 @@ class font_patcher:
         font.comment = projectInfo
         font.fontlog = projectInfo
 
-
     def setup_version(self):
         """ Add the Nerd Font version to the original version """
         # print("Version was {}".format(sourceFont.version))
@@ -701,7 +697,6 @@ class font_patcher:
         # FOR SARASA: set version
         self.sourceFont.appendSFNTName(str('Chinese (PRC)'), str('Version'), "版本 " + self.sourceFont.version)
         # print("Version now is {}".format(sourceFont.version))
-
 
     def remove_ligatures(self):
         # let's deal with ligatures (mostly for monospaced fonts)
@@ -719,7 +714,6 @@ class font_patcher:
                         print("Failed to remove subtable:", subtable)
         elif self.args.removeligatures:
             print("Unable to read configfile, unable to remove ligatures")
-
 
     def assert_monospace(self):
         # Check if the sourcefont is monospaced
@@ -744,7 +738,6 @@ class font_patcher:
             force_panose_monospaced(self.sourceFont)
         # FOR SARASA
         force_panose_monospaced(self.sourceFont)
-
 
     def setup_patch_set(self):
         """ Creates list of dicts to with instructions on copying glyphs from each symbol font into self.sourceFont """
@@ -975,36 +968,295 @@ class font_patcher:
         ]}
         MDI_SCALE_LIST = None # Maybe later add some selected ScaleGroups
 
-
         # Define the character ranges
         # Symbol font ranges
         self.patch_set = [
-            {'Enabled': True,                           'Name': "Seti-UI + Custom",        'Filename': "original-source.otf",                            'Exact': False, 'SymStart': 0xE4FA, 'SymEnd': 0xE5FF, 'SrcStart': 0xE5FA, 'ScaleRules': None,             'Attributes': SYM_ATTR_DEFAULT},
-            {'Enabled': True,                           'Name': "Heavy Angle Brackets",    'Filename': "extraglyphs.sfd",                                'Exact': True,  'SymStart': 0x276C, 'SymEnd': 0x2771, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_HEAVYBRACKETS},
-            {'Enabled': box_enabled,                    'Name': "Box Drawing",             'Filename': "extraglyphs.sfd",                                'Exact': True,  'SymStart': 0x2500, 'SymEnd': 0x259F, 'SrcStart': None,   'ScaleRules': BOX_SCALE_LIST,   'Attributes': SYM_ATTR_BOX},
-            {'Enabled': True,                           'Name': "Devicons",                'Filename': "devicons.ttf",                                   'Exact': False, 'SymStart': 0xE600, 'SymEnd': 0xE6C5, 'SrcStart': 0xE700, 'ScaleRules': DEVI_SCALE_LIST,  'Attributes': SYM_ATTR_DEFAULT},
-            {'Enabled': self.args.powerline,            'Name': "Powerline Symbols",       'Filename': "powerline-symbols/PowerlineSymbols.otf",         'Exact': True,  'SymStart': 0xE0A0, 'SymEnd': 0xE0A2, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_POWERLINE},
-            {'Enabled': self.args.powerline,            'Name': "Powerline Symbols",       'Filename': "powerline-symbols/PowerlineSymbols.otf",         'Exact': True,  'SymStart': 0xE0B0, 'SymEnd': 0xE0B3, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_POWERLINE},
-            {'Enabled': self.args.powerlineextra,       'Name': "Powerline Extra Symbols", 'Filename': "PowerlineExtraSymbols.otf",                      'Exact': True,  'SymStart': 0xE0A3, 'SymEnd': 0xE0A3, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_POWERLINE},
-            {'Enabled': self.args.powerlineextra,       'Name': "Powerline Extra Symbols", 'Filename': "PowerlineExtraSymbols.otf",                      'Exact': True,  'SymStart': 0xE0B4, 'SymEnd': 0xE0C8, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_POWERLINE},
-            {'Enabled': self.args.powerlineextra,       'Name': "Powerline Extra Symbols", 'Filename': "PowerlineExtraSymbols.otf",                      'Exact': True,  'SymStart': 0xE0CA, 'SymEnd': 0xE0CA, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_POWERLINE},
-            {'Enabled': self.args.powerlineextra,       'Name': "Powerline Extra Symbols", 'Filename': "PowerlineExtraSymbols.otf",                      'Exact': True,  'SymStart': 0xE0CC, 'SymEnd': 0xE0D4, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_POWERLINE},
-            {'Enabled': self.args.powerlineextra,       'Name': "Powerline Extra Symbols", 'Filename': "PowerlineExtraSymbols.otf",                      'Exact': True,  'SymStart': 0x2630, 'SymEnd': 0x2630, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_TRIGRAPH},
-            {'Enabled': self.args.pomicons,             'Name': "Pomicons",                'Filename': "Pomicons.otf",                                   'Exact': True,  'SymStart': 0xE000, 'SymEnd': 0xE00A, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_DEFAULT},
-            {'Enabled': self.args.fontawesome,          'Name': "Font Awesome",            'Filename': "font-awesome/FontAwesome.otf",                   'Exact': True,  'SymStart': 0xF000, 'SymEnd': 0xF2E0, 'SrcStart': None,   'ScaleRules': FONTA_SCALE_LIST, 'Attributes': SYM_ATTR_FONTA},
-            {'Enabled': self.args.fontawesomeextension, 'Name': "Font Awesome Extension",  'Filename': "font-awesome-extension.ttf",                     'Exact': False, 'SymStart': 0xE000, 'SymEnd': 0xE0A9, 'SrcStart': 0xE200, 'ScaleRules': None,             'Attributes': SYM_ATTR_DEFAULT},  # Maximize
-            {'Enabled': self.args.powersymbols,         'Name': "Power Symbols",           'Filename': "Unicode_IEC_symbol_font.otf",                    'Exact': True,  'SymStart': 0x23FB, 'SymEnd': 0x23FE, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_DEFAULT},  # Power, Power On/Off, Power On, Sleep
-            {'Enabled': self.args.powersymbols,         'Name': "Power Symbols",           'Filename': "Unicode_IEC_symbol_font.otf",                    'Exact': True,  'SymStart': 0x2B58, 'SymEnd': 0x2B58, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_DEFAULT},  # Heavy Circle (aka Power Off)
-            {'Enabled': self.args.material,             'Name': "Material legacy",         'Filename': "materialdesignicons-webfont.ttf",                'Exact': False, 'SymStart': 0xF001, 'SymEnd': 0xF847, 'SrcStart': 0xF500, 'ScaleRules': None,             'Attributes': SYM_ATTR_DEFAULT},
-            {'Enabled': self.args.material,             'Name': "Material",                'Filename': "materialdesign/MaterialDesignIconsDesktop.ttf",  'Exact': True,  'SymStart': 0xF0001,'SymEnd': 0xF1AF0,'SrcStart': None,   'ScaleRules': MDI_SCALE_LIST,   'Attributes': SYM_ATTR_DEFAULT},
-            {'Enabled': self.args.weather,              'Name': "Weather Icons",           'Filename': "weather-icons/weathericons-regular-webfont.ttf", 'Exact': False, 'SymStart': 0xF000, 'SymEnd': 0xF0EB, 'SrcStart': 0xE300, 'ScaleRules': WEATH_SCALE_LIST, 'Attributes': SYM_ATTR_DEFAULT},
-            {'Enabled': self.args.fontlogos,            'Name': "Font Logos",              'Filename': "font-logos.ttf",                                 'Exact': True,  'SymStart': 0xF300, 'SymEnd': 0xF32F, 'SrcStart': None,   'ScaleRules': None,             'Attributes': SYM_ATTR_DEFAULT},
-            {'Enabled': self.args.octicons,             'Name': "Octicons",                'Filename': "octicons.ttf",                                   'Exact': False, 'SymStart': 0xF000, 'SymEnd': 0xF105, 'SrcStart': 0xF400, 'ScaleRules': OCTI_SCALE_LIST,  'Attributes': SYM_ATTR_DEFAULT},  # Magnifying glass
-            {'Enabled': self.args.octicons,             'Name': "Octicons",                'Filename': "octicons.ttf",                                   'Exact': True,  'SymStart': 0x2665, 'SymEnd': 0x2665, 'SrcStart': None,   'ScaleRules': OCTI_SCALE_LIST,  'Attributes': SYM_ATTR_DEFAULT},  # Heart
-            {'Enabled': self.args.octicons,             'Name': "Octicons",                'Filename': "octicons.ttf",                                   'Exact': True,  'SymStart': 0X26A1, 'SymEnd': 0X26A1, 'SrcStart': None,   'ScaleRules': OCTI_SCALE_LIST,  'Attributes': SYM_ATTR_DEFAULT},  # Zap
-            {'Enabled': self.args.octicons,             'Name': "Octicons",                'Filename': "octicons.ttf",                                   'Exact': False, 'SymStart': 0xF27C, 'SymEnd': 0xF27C, 'SrcStart': 0xF4A9, 'ScaleRules': OCTI_SCALE_LIST,  'Attributes': SYM_ATTR_DEFAULT},  # Desktop
-            {'Enabled': self.args.codicons,             'Name': "Codicons",                'Filename': "codicons/codicon.ttf",                           'Exact': True,  'SymStart': 0xEA60, 'SymEnd': 0xEBEB, 'SrcStart': None,   'ScaleRules': CODI_SCALE_LIST,  'Attributes': SYM_ATTR_DEFAULT},
-            {'Enabled': self.args.custom,               'Name': "Custom",                  'Filename': self.args.custom,                                 'Exact': True,  'SymStart': 0x0000, 'SymEnd': 0x0000, 'SrcStart': None,   'ScaleRules': None,             'Attributes': CUSTOM_ATTR}
+            {
+                "Enabled": True,
+                "Name": "Seti-UI + Custom",
+                "Filename": "original-source.otf",
+                "Exact": False,
+                "SymStart": 0xE4FA,
+                "SymEnd": 0xE5FF,
+                "SrcStart": 0xE5FA,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },
+            {
+                "Enabled": True,
+                "Name": "Heavy Angle Brackets",
+                "Filename": "extraglyphs.sfd",
+                "Exact": True,
+                "SymStart": 0x276C,
+                "SymEnd": 0x2771,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_HEAVYBRACKETS,
+            },
+            {
+                "Enabled": box_enabled,
+                "Name": "Box Drawing",
+                "Filename": "extraglyphs.sfd",
+                "Exact": True,
+                "SymStart": 0x2500,
+                "SymEnd": 0x259F,
+                "SrcStart": None,
+                "ScaleRules": BOX_SCALE_LIST,
+                "Attributes": SYM_ATTR_BOX,
+            },
+            {
+                "Enabled": True,
+                "Name": "Devicons",
+                "Filename": "devicons.ttf",
+                "Exact": False,
+                "SymStart": 0xE600,
+                "SymEnd": 0xE6C5,
+                "SrcStart": 0xE700,
+                "ScaleRules": DEVI_SCALE_LIST,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },
+            {
+                "Enabled": self.args.powerline,
+                "Name": "Powerline Symbols",
+                "Filename": "powerline-symbols/PowerlineSymbols.otf",
+                "Exact": True,
+                "SymStart": 0xE0A0,
+                "SymEnd": 0xE0A2,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_POWERLINE,
+            },
+            {
+                "Enabled": self.args.powerline,
+                "Name": "Powerline Symbols",
+                "Filename": "powerline-symbols/PowerlineSymbols.otf",
+                "Exact": True,
+                "SymStart": 0xE0B0,
+                "SymEnd": 0xE0B3,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_POWERLINE,
+            },
+            {
+                "Enabled": self.args.powerlineextra,
+                "Name": "Powerline Extra Symbols",
+                "Filename": "PowerlineExtraSymbols.otf",
+                "Exact": True,
+                "SymStart": 0xE0A3,
+                "SymEnd": 0xE0A3,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_POWERLINE,
+            },
+            {
+                "Enabled": self.args.powerlineextra,
+                "Name": "Powerline Extra Symbols",
+                "Filename": "PowerlineExtraSymbols.otf",
+                "Exact": True,
+                "SymStart": 0xE0B4,
+                "SymEnd": 0xE0C8,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_POWERLINE,
+            },
+            {
+                "Enabled": self.args.powerlineextra,
+                "Name": "Powerline Extra Symbols",
+                "Filename": "PowerlineExtraSymbols.otf",
+                "Exact": True,
+                "SymStart": 0xE0CA,
+                "SymEnd": 0xE0CA,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_POWERLINE,
+            },
+            {
+                "Enabled": self.args.powerlineextra,
+                "Name": "Powerline Extra Symbols",
+                "Filename": "PowerlineExtraSymbols.otf",
+                "Exact": True,
+                "SymStart": 0xE0CC,
+                "SymEnd": 0xE0D4,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_POWERLINE,
+            },
+            {
+                "Enabled": self.args.powerlineextra,
+                "Name": "Powerline Extra Symbols",
+                "Filename": "PowerlineExtraSymbols.otf",
+                "Exact": True,
+                "SymStart": 0x2630,
+                "SymEnd": 0x2630,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_TRIGRAPH,
+            },
+            {
+                "Enabled": self.args.pomicons,
+                "Name": "Pomicons",
+                "Filename": "Pomicons.otf",
+                "Exact": True,
+                "SymStart": 0xE000,
+                "SymEnd": 0xE00A,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },
+            {
+                "Enabled": self.args.fontawesome,
+                "Name": "Font Awesome",
+                "Filename": "font-awesome/FontAwesome.otf",
+                "Exact": True,
+                "SymStart": 0xF000,
+                "SymEnd": 0xF2E0,
+                "SrcStart": None,
+                "ScaleRules": FONTA_SCALE_LIST,
+                "Attributes": SYM_ATTR_FONTA,
+            },
+            {
+                "Enabled": self.args.fontawesomeextension,
+                "Name": "Font Awesome Extension",
+                "Filename": "font-awesome-extension.ttf",
+                "Exact": False,
+                "SymStart": 0xE000,
+                "SymEnd": 0xE0A9,
+                "SrcStart": 0xE200,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },  # Maximize
+            {
+                "Enabled": self.args.powersymbols,
+                "Name": "Power Symbols",
+                "Filename": "Unicode_IEC_symbol_font.otf",
+                "Exact": True,
+                "SymStart": 0x23FB,
+                "SymEnd": 0x23FE,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },  # Power, Power On/Off, Power On, Sleep
+            {
+                "Enabled": self.args.powersymbols,
+                "Name": "Power Symbols",
+                "Filename": "Unicode_IEC_symbol_font.otf",
+                "Exact": True,
+                "SymStart": 0x2B58,
+                "SymEnd": 0x2B58,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },  # Heavy Circle (aka Power Off)
+            {
+                "Enabled": self.args.material,
+                "Name": "Material legacy",
+                "Filename": "materialdesignicons-webfont.ttf",
+                "Exact": False,
+                "SymStart": 0xF001,
+                "SymEnd": 0xF847,
+                "SrcStart": 0xF500,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },
+            {
+                "Enabled": self.args.material,
+                "Name": "Material",
+                "Filename": "materialdesign/MaterialDesignIconsDesktop.ttf",
+                "Exact": True,
+                "SymStart": 0xF0001,
+                "SymEnd": 0xF1AF0,
+                "SrcStart": None,
+                "ScaleRules": MDI_SCALE_LIST,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },
+            {
+                "Enabled": self.args.weather,
+                "Name": "Weather Icons",
+                "Filename": "weather-icons/weathericons-regular-webfont.ttf",
+                "Exact": False,
+                "SymStart": 0xF000,
+                "SymEnd": 0xF0EB,
+                "SrcStart": 0xE300,
+                "ScaleRules": WEATH_SCALE_LIST,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },
+            {
+                "Enabled": self.args.fontlogos,
+                "Name": "Font Logos",
+                "Filename": "font-logos.ttf",
+                "Exact": True,
+                "SymStart": 0xF300,
+                "SymEnd": 0xF32F,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },
+            {
+                "Enabled": self.args.octicons,
+                "Name": "Octicons",
+                "Filename": "octicons/octicons.ttf",
+                "Exact": False,
+                "SymStart": 0xF000,
+                "SymEnd": 0xF105,
+                "SrcStart": 0xF400,
+                "ScaleRules": OCTI_SCALE_LIST,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },  # Magnifying glass
+            {
+                "Enabled": self.args.octicons,
+                "Name": "Octicons",
+                "Filename": "octicons/octicons.ttf",
+                "Exact": True,
+                "SymStart": 0x2665,
+                "SymEnd": 0x2665,
+                "SrcStart": None,
+                "ScaleRules": OCTI_SCALE_LIST,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },  # Heart
+            {
+                "Enabled": self.args.octicons,
+                "Name": "Octicons",
+                "Filename": "octicons/octicons.ttf",
+                "Exact": True,
+                "SymStart": 0x26A1,
+                "SymEnd": 0x26A1,
+                "SrcStart": None,
+                "ScaleRules": OCTI_SCALE_LIST,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },  # Zap
+            {
+                "Enabled": self.args.octicons,
+                "Name": "Octicons",
+                "Filename": "octicons/octicons.ttf",
+                "Exact": False,
+                "SymStart": 0xF27C,
+                "SymEnd": 0xF27C,
+                "SrcStart": 0xF4A9,
+                "ScaleRules": OCTI_SCALE_LIST,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },  # Desktop
+            {
+                "Enabled": self.args.codicons,
+                "Name": "Codicons",
+                "Filename": "codicons/codicon.ttf",
+                "Exact": True,
+                "SymStart": 0xEA60,
+                "SymEnd": 0xEBEB,
+                "SrcStart": None,
+                "ScaleRules": CODI_SCALE_LIST,
+                "Attributes": SYM_ATTR_DEFAULT,
+            },
+            {
+                "Enabled": self.args.custom,
+                "Name": "Custom",
+                "Filename": self.args.custom,
+                "Exact": True,
+                "SymStart": 0x0000,
+                "SymEnd": 0x0000,
+                "SrcStart": None,
+                "ScaleRules": None,
+                "Attributes": CUSTOM_ATTR,
+            },
         ]
 
     def improve_line_dimensions(self):
@@ -1168,7 +1420,6 @@ class font_patcher:
             self.font_dim['xmax'] = self.font_dim['width'] # In fact 'xmax' is never used
         # print("FINAL", self.font_dim)
 
-
     def get_target_width(self, stretch):
         """ Get the target width (1 or 2 'cell') for a given stretch parameter """
         # For monospaced fonts all chars need to be maximum 'one' space wide
@@ -1209,7 +1460,6 @@ class font_patcher:
                 scale_ratio_y = 1.0
 
         return (scale_ratio_x, scale_ratio_y)
-
 
     def copy_glyphs(self, sourceFontStart, symbolFont, symbolFontStart, symbolFontEnd, exactEncoding, scaleRules, setName, attributes):
         """ Copies symbol glyphs into self.sourceFont """
@@ -1444,7 +1694,6 @@ class font_patcher:
         if not self.args.quiet:
             sys.stdout.write("\n")
 
-
     def set_sourcefont_glyph_widths(self):
         """ Makes self.sourceFont monospace compliant """
 
@@ -1464,7 +1713,6 @@ class font_patcher:
 
             self.set_glyph_width_mono(glyph)
 
-
     def remove_glyph_neg_bearings(self, glyph):
         """ Sets passed glyph's bearings 0 if they are negative. """
         try:
@@ -1474,7 +1722,6 @@ class font_patcher:
                 glyph.right_side_bearing = 0
         except:
             pass
-
 
     def set_glyph_width_mono(self, glyph):
         """ Sets passed glyph.width to self.font_dim.width.
