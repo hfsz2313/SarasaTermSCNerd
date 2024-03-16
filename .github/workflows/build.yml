@@ -1,0 +1,70 @@
+# This is a basic workflow to help you get started with Actions
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+release:
+    types: [created]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Install deps
+        run: sudo apt update && sudo apt install -y fontforge python3-fontforge unzip python3-fonttools fonttools
+
+      - name: Download Sarasa Gothic
+        run: |
+          wget -q $(curl 'https://api.github.com/repos/be5invis/Sarasa-Gothic/releases/latest' | jq -r '.assets | map(.browser_download_url) | map(select(test("SarasaTermSC-TTF-[0-9.]+\\.zip"))) | .[0]')
+          unzip SarasaTermSC-TTF-*.zip -d sarasa
+
+
+      - name: Download Font Patcher
+        run: |
+          wget -q https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FontPatcher.zip
+          unzip FontPatcher.zip
+
+      - name: Copy Scripts
+        run: cp scripts/font-patcher font-patcher && cp scripts/otf2otc.py otf2otc.py
+
+      - name: Build Nerd Font
+        run: bash -xeu scripts/build
+
+      - name: Upload ttc.7z
+        uses: actions/upload-artifact@v4
+        with:
+          name: SarasaTermSCNerd.ttc.7z
+          path: sarasa-nerd/SarasaTermSCNerd.ttc.7z
+
+      - name: Upload ttf.7z
+        uses: actions/upload-artifact@v4
+        with:
+          name: SarasaTermSCNerd.ttf.7z
+          path: sarasa-nerd/SarasaTermSCNerd.ttf.7z
+
+      - name: Upload ttc.tar.gz
+        uses: actions/upload-artifact@v4
+        with:
+          name: SarasaTermSCNerd.ttc.tar.gz
+          path: sarasa-nerd/SarasaTermSCNerd.tar.gz
+
+      - name: Upload ttf.tar.gz
+        uses: actions/upload-artifact@v4
+        with:
+          name: SarasaTermSCNerd.ttf.tar.gz
+          path: sarasa-nerd/SarasaTermSCNerd.ttf.tar.gz
