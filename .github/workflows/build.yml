@@ -40,7 +40,7 @@ jobs:
           unzip FontPatcher.zip
 
       - name: Copy Scripts
-        run: cp scripts/font-patcher font-patcher && cp scripts/otf2otc.py otf2otc.py
+        run: cp -f scripts/font-patcher font-patcher && cp scripts/otf2otc.py otf2otc.py
 
       - name: Build Nerd Font
         run: bash -xeu scripts/build
